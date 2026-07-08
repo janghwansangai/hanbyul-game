@@ -135,3 +135,57 @@ body {
   50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
 }
 .anim-danger { animation: dangerPulse 1s infinite; }
+
+/* ===== 캐릭터 생동감 (애니메이션 느낌) ===== */
+
+/* 눈 깜빡임 (SVG 눈꺼풀이 잠깐 내려옴) */
+@keyframes blink {
+  0%, 92%, 100% { transform: scaleY(0); }
+  95%, 97% { transform: scaleY(1); }
+}
+.anim-blink {
+  transform-box: fill-box;
+  transform-origin: center top;
+  animation: blink 4.5s infinite;
+}
+.anim-blink.b2 { animation-duration: 6.1s; animation-delay: 1.3s; }
+
+/* 숨쉬기 (몸통이 살짝 부풀었다 줄어듦) */
+@keyframes breathe {
+  0%, 100% { transform: scaleX(1) scaleY(1); }
+  50% { transform: scaleX(1.015) scaleY(0.99); }
+}
+.anim-breathe {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: breathe 3.4s ease-in-out infinite;
+}
+
+/* 둥실둥실 idle 움직임 */
+@keyframes idleFloat {
+  0%, 100% { transform: translateY(0) rotate(-1deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+.anim-idle { animation: idleFloat 3.6s ease-in-out infinite; }
+
+/* 머리카락 살랑임 */
+@keyframes hairSway {
+  0%, 100% { transform: rotate(-1.5deg); }
+  50% { transform: rotate(1.5deg); }
+}
+.anim-hair {
+  transform-box: fill-box;
+  transform-origin: center 30%;
+  animation: hairSway 4s ease-in-out infinite;
+}
+
+/* 반짝이 눈빛 */
+@keyframes eyeShine {
+  0%, 100% { opacity: 0.9; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.25); }
+}
+.anim-shine {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: eyeShine 2.2s ease-in-out infinite;
+}

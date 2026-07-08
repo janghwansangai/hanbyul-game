@@ -687,7 +687,7 @@ function NightStars() {
 }
 
 function CharacterFace({ stats, sparkle }) {
-  let mood = 'normal', anim = '', caption = '보통이야~'
+  let mood = 'normal', anim = 'anim-idle', caption = '보통이야~'
   if (stats.popcorn > 70) { mood = 'popcorn'; anim = 'anim-shakehard'; caption = '머리가 팝콘팝콘…' }
   else if (stats.health < 30) { mood = 'tired'; anim = 'anim-sleepy'; caption = '너무 졸리고 지쳤어…' }
   else if (stats.popcorn < 30 && stats.health > 70) { mood = 'good'; anim = 'anim-bouncey'; caption = '컨디션 최고!!' }
