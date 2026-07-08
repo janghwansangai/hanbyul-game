@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+body {
+  font-family: 'Jua', sans-serif;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* 스탯 플로팅 텍스트 */
+@keyframes floatUp {
+  0% { opacity: 0; transform: translateY(8px) scale(0.7); }
+  15% { opacity: 1; transform: translateY(0) scale(1.15); }
+  100% { opacity: 0; transform: translateY(-46px) scale(1); }
+}
+.anim-float { animation: floatUp 1.3s ease-out forwards; }
+
+/* 팝콘 높음: 화면 미세 흔들림 */
+@keyframes softShake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-2px); }
+  75% { transform: translateX(2px); }
+}
+.anim-softshake { animation: softShake 0.4s linear infinite; }
+
+/* 강한 흔들림 (보스 피격 등) */
+@keyframes shakeHard {
+  0%, 100% { transform: translate(0, 0); }
+  20% { transform: translate(-6px, 2px); }
+  40% { transform: translate(5px, -3px); }
+  60% { transform: translate(-4px, 3px); }
+  80% { transform: translate(6px, -2px); }
+}
+.anim-shakehard { animation: shakeHard 0.35s linear infinite; }
+
+/* 팝업 등장 */
+@keyframes popIn {
+  0% { transform: scale(0.3); opacity: 0; }
+  70% { transform: scale(1.12); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.anim-pop { animation: popIn 0.45s cubic-bezier(0.2, 1.4, 0.4, 1) both; }
+
+/* 지우 슬라이드 인 */
+@keyframes slideInR {
+  from { transform: translateX(120%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+.anim-slidein { animation: slideInR 0.5s cubic-bezier(0.2, 1.2, 0.4, 1) both; }
+
+/* 밤하늘 별 반짝임 */
+@keyframes twinkle {
+  0%, 100% { opacity: 0.15; }
+  50% { opacity: 1; }
+}
+.anim-twinkle { animation: twinkle 2.2s ease-in-out infinite; }
+
+/* 최종보스 R1: 알림 낙하 */
+@keyframes fallDown {
+  from { transform: translateY(-70px); }
+  to { transform: translateY(72vh); }
+}
+.anim-fall { animation: fallDown 3.4s linear forwards; }
+
+/* 콤보 텍스트 팝 */
+@keyframes comboPop {
+  0% { transform: scale(0.4); opacity: 0; }
+  40% { transform: scale(1.35); }
+  100% { transform: scale(1); opacity: 1; }
+}
+.anim-combo { animation: comboPop 0.4s ease-out both; }
+
+/* 색종이 */
+@keyframes confettiFall {
+  0% { transform: translateY(-10vh) rotate(0deg); }
+  100% { transform: translateY(115vh) rotate(720deg); }
+}
+.anim-confetti { animation: confettiFall linear forwards; }
+
+/* 이벤트 카드 뒤집기 */
+@keyframes flipIn {
+  from { transform: perspective(600px) rotateY(90deg); opacity: 0.3; }
+  to { transform: perspective(600px) rotateY(0deg); opacity: 1; }
+}
+.anim-flip { animation: flipIn 0.55s ease-out both; }
+
+/* 배드엔딩 글리치 */
+@keyframes glitch {
+  0%, 100% { text-shadow: 2px 0 #f0f, -2px 0 #0ff; }
+  25% { text-shadow: -2px 1px #f0f, 2px -1px #0ff; }
+  50% { text-shadow: 1px -2px #f0f, -1px 2px #0ff; }
+}
+.anim-glitch { animation: glitch 0.25s steps(2) infinite; }
+
+@keyframes flicker {
+  0%, 91%, 94%, 98%, 100% { opacity: 1; }
+  92% { opacity: 0.5; }
+  96% { opacity: 0.7; }
+}
+.anim-flicker { animation: flicker 1.7s infinite; }
+
+/* 몬스터 등장 흔들림 */
+@keyframes wobble {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50% { transform: rotate(4deg) scale(1.06); }
+}
+.anim-wobble { animation: wobble 0.5s ease-in-out infinite; }
+
+/* 레벨업 반짝이 */
+@keyframes sparkleSpin {
+  0% { transform: scale(0) rotate(0deg); opacity: 0; }
+  50% { transform: scale(1.25) rotate(180deg); opacity: 1; }
+  100% { transform: scale(0.8) rotate(360deg); opacity: 0; }
+}
+.anim-sparkle { animation: sparkleSpin 1.4s ease-out both; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+.anim-fadein { animation: fadeIn 0.4s ease both; }
+
+/* 캐릭터 통통 튀기 */
+@keyframes bounceY {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-12px); }
+}
+.anim-bouncey { animation: bounceY 1s ease-in-out infinite; }
+
+/* 졸린 캐릭터 */
+@keyframes sleepy {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.55; }
+}
+.anim-sleepy { animation: sleepy 2.4s ease-in-out infinite; }
+
+/* 위험 게이지 테두리 */
+@keyframes dangerPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
+  50% { box-shadow: 0 0 0 4px rgba(239, 68, 68, 0); }
+}
+.anim-danger { animation: dangerPulse 1s infinite; }
