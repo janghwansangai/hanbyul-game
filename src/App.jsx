@@ -8,6 +8,7 @@ import {
 import { sfx } from './game/sound.js'
 import { MidBoss, FinalBoss } from './components/Boss.jsx'
 import Ending, { Confetti } from './components/Ending.jsx'
+import { Hanbyul } from './components/Character.jsx'
 
 const SAVE_KEY = 'hanbyul-save-v2'
 const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)))
@@ -686,10 +687,10 @@ function NightStars() {
 }
 
 function CharacterFace({ stats, sparkle }) {
-  let face = '🙂', anim = '', caption = '보통이야~'
-  if (stats.popcorn > 70) { face = '😵‍💫'; anim = 'anim-shakehard'; caption = '머리가 팝콘팝콘…' }
-  else if (stats.health < 30) { face = '🥱'; anim = 'anim-sleepy'; caption = '너무 졸리고 지쳤어…' }
-  else if (stats.popcorn < 30 && stats.health > 70) { face = '😆'; anim = 'anim-bouncey'; caption = '컨디션 최고!!' }
+  let mood = 'normal', anim = '', caption = '보통이야~'
+  if (stats.popcorn > 70) { mood = 'popcorn'; anim = 'anim-shakehard'; caption = '머리가 팝콘팝콘…' }
+  else if (stats.health < 30) { mood = 'tired'; anim = 'anim-sleepy'; caption = '너무 졸리고 지쳤어…' }
+  else if (stats.popcorn < 30 && stats.health > 70) { mood = 'good'; anim = 'anim-bouncey'; caption = '컨디션 최고!!' }
   return (
     <div className="relative flex flex-col items-center">
       {sparkle && (
@@ -699,7 +700,7 @@ function CharacterFace({ stats, sparkle }) {
           <span className="absolute top-8 -left-9 text-xl anim-sparkle" style={{ animationDelay: '0.4s' }}>⭐</span>
         </>
       )}
-      <div className={`text-8xl ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }}>{face}</div>
+      <Hanbyul mood={mood} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
       <div className="mt-2 bg-white/85 text-slate-600 text-xs px-3 py-1 rounded-full shadow">한별: {caption}</div>
     </div>
   )
@@ -723,7 +724,7 @@ function TitleScreen({ hasSave, onNew, onContinue }) {
       <div className="w-full max-w-[420px] flex flex-col items-center justify-center p-6 text-center">
         <p className="text-slate-500 text-sm">진짜 레벨업</p>
         <h1 className="text-4xl text-slate-800 mt-1 leading-snug">🌟 한별이 키우기</h1>
-        <div className="text-8xl mt-8 anim-bouncey">🙂</div>
+        <Hanbyul mood="good" className="w-40 h-40 mt-8 anim-bouncey" />
         <p className="text-slate-600 text-sm mt-6 leading-relaxed">
           한별이의 7일을 부탁해!<br />
           <b>게임을 끊는 게 아니라, 게임과 잘 지내는 법</b>을<br />찾아주는 거야. 🍿👾
@@ -821,6 +822,7 @@ function ModalHost({ g, modal, handlers }) {
             <div className="text-5xl">🧒</div>
             <h3 className="text-lg mt-2 text-slate-800">안녕! 난 지우야</h3>
             <div className="text-sm text-slate-600 mt-3 text-left leading-relaxed space-y-2 bg-slate-50 rounded-2xl p-3">
+              <p>👆 아래 버튼을 <b>마우스로 클릭</b>(폰은 손가락으로 터치)하면 한별이가 행동해!</p>
               <p>🍿 <b>팝콘 지수</b>는 낮게, 나머지는 높게 유지해 줘!</p>
               <p>🎮 게임은 해도 돼! 근데 <b>연속으로 하면</b> 재미는 줄고 팝콘만 늘어나. 신기하지?</p>
               <p>😊 <b>행복</b>이 너무 낮아도 큰일 나. 놀 땐 놀아!</p>

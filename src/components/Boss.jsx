@@ -40,15 +40,20 @@ export function MidBoss({ fast, onEnd }) {
           <div className="text-center anim-pop">
             <div className="text-8xl anim-wobble">👾</div>
             <h2 className="text-2xl text-red-400 mt-4 anim-glitch">팝콘 브레인 몬스터 출현!</h2>
-            <p className="text-slate-300 mt-3 text-sm leading-relaxed">
-              10초 동안 ⭐를 최대한 많이 잡아!<br />
-              📱은 몬스터의 <b className="text-red-400">가짜 유혹</b>이야. 누르면 <b className="text-red-400">-2점</b>!<br />
-              <b className="text-yellow-300">⭐ 8개 이상</b>이면 몬스터를 물리칠 수 있어.
-            </p>
+            <div className="bg-slate-800/80 rounded-2xl p-4 mt-4 text-left text-sm text-slate-200 leading-relaxed">
+              <p className="text-center text-yellow-300 font-bold mb-2">📖 이렇게 하는 거야</p>
+              <p>1️⃣ 화면 여기저기에 <b className="text-yellow-300">⭐(별)</b>이 나타났다 사라져.</p>
+              <p>2️⃣ 별을 <b>빠르게 눌러서</b> 10초 동안 많이 모아!</p>
+              <p>3️⃣ 가짜 유혹 <b className="text-red-400">📱(폰)</b>은 절대 누르지 마! 누르면 <b className="text-red-400">-2점</b>.</p>
+              <p>4️⃣ <b className="text-yellow-300">⭐ 8개 이상</b> 모으면 몬스터를 물리쳐!</p>
+              <div className="mt-2 pt-2 border-t border-slate-600 text-xs text-sky-300">
+                💻 컴퓨터: <b>마우스로 클릭</b> · 📱 폰/태블릿: <b>손가락으로 톡톡</b>
+              </div>
+            </div>
             {fast && <p className="text-red-400 text-xs mt-2">⚠️ 팝콘 지수가 높아서 몬스터가 더 빠르다…!</p>}
             <button onClick={() => { setStage('play'); sfx.click() }}
-              className="mt-6 px-8 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xl rounded-2xl shadow-lg active:scale-95 transition">
-              ⚔️ 싸운다!
+              className="mt-5 px-8 py-3 bg-gradient-to-r from-yellow-400 to-orange-500 text-white text-xl rounded-2xl shadow-lg active:scale-95 transition">
+              ⚔️ 시작! (준비됐어)
             </button>
           </div>
         )}
@@ -61,6 +66,7 @@ export function MidBoss({ fast, onEnd }) {
               <div className="w-56 h-2 bg-slate-700 rounded-full overflow-hidden">
                 <div className="h-full bg-yellow-400 transition-all duration-1000" style={{ width: `${timeLeft * 10}%` }} />
               </div>
+              <div className="mt-1 bg-black/40 text-xs text-white px-3 py-1 rounded-full">⭐ 누르기! · 📱 누르지 마!</div>
             </div>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-6xl anim-wobble opacity-60 pointer-events-none">👾</div>
             {targets.map((t) => (
@@ -248,9 +254,11 @@ export function FinalBoss({ popcorn, onEnd }) {
               "일주일 내내 지켜봤다, 한별아…<br />오늘 밤, 네 뇌는 내 것이다!"
             </p>
             <div className="mt-4 bg-slate-800/80 rounded-2xl p-3 text-left text-xs text-slate-300 leading-relaxed">
-              <p>⚔️ <b className="text-white">3라운드 중 2승</b>하면 승리!</p>
+              <p>⚔️ <b className="text-white">3라운드 중 2번 이기면</b> 승리!</p>
+              <p>1️⃣ 알림 폭탄 · 2️⃣ OX 퀴즈 · 3️⃣ 집중의 5초</p>
               <p>👹 보스 HP = 50 + 내 팝콘 지수 = <b className="text-red-400">{maxHp}</b></p>
               <p className="text-purple-300">일주일 동안 팝콘 지수를 잘 관리했다면 쉬운 싸움이 될 거야.</p>
+              <p className="mt-1 pt-1 border-t border-slate-600 text-sky-300">💻 컴퓨터는 마우스로, 📱 폰은 손가락으로 하면 돼!</p>
             </div>
             <button onClick={() => { setStage('r1'); sfx.boss() }}
               className="mt-6 px-8 py-3 bg-gradient-to-r from-purple-500 to-red-500 text-white text-xl rounded-2xl shadow-lg active:scale-95 transition">
@@ -263,7 +271,7 @@ export function FinalBoss({ popcorn, onEnd }) {
           <div className="absolute inset-0 pt-16">
             <div className="text-center text-white z-10 relative pointer-events-none">
               <p className="text-sm text-purple-300">ROUND 1 · 알림 폭탄</p>
-              <p className="text-xs text-slate-400">유혹 알림만 눌러서 없애! 진짜 알림은 놔둬!</p>
+              <p className="text-xs text-slate-400">📥 위에서 떨어지는 알림 중, <b className="text-pink-300">유혹 알림</b>만 눌러서 없애!<br /><b className="text-white">진짜 알림</b>(숙제·엄마)은 누르면 감점이야!</p>
               <div className="text-4xl font-bold text-yellow-300 mt-1">{r1Time}</div>
               <p className="text-lg">✅ {r1Score}점 <span className="text-xs text-slate-400">(6점 이상 승리)</span></p>
             </div>
@@ -311,7 +319,8 @@ export function FinalBoss({ popcorn, onEnd }) {
         {stage === 'r3' && (
           <div className="w-full text-center relative">
             <p className="text-sm text-purple-300">ROUND 3 · 집중의 5초</p>
-            <p className="text-xs text-slate-400 mb-4">버튼을 5초 동안 꾹! 무슨 일이 있어도 손을 떼지 마!</p>
+            <p className="text-xs text-slate-400 mb-1">아래 동그란 버튼을 <b className="text-white">5초 동안 계속 누르고 있어!</b></p>
+            <p className="text-[11px] text-sky-300 mb-4">💻 마우스로 누른 채 그대로 · 📱 손가락으로 꾹 누른 채 그대로<br />중간에 광고가 튀어나와도 <b className="text-white">손을 떼지 마!</b></p>
             <div className="w-full h-4 bg-slate-800 rounded-full overflow-hidden mb-6">
               <div className="h-full bg-gradient-to-r from-green-400 to-yellow-300" style={{ width: `${(holdMs / 5000) * 100}%` }} />
             </div>
