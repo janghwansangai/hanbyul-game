@@ -9,6 +9,7 @@ import { sfx } from './game/sound.js'
 import { MidBoss, FinalBoss } from './components/Boss.jsx'
 import Ending, { Confetti } from './components/Ending.jsx'
 import { Hanbyul } from './components/Character.jsx'
+import Scene from './components/Scene.jsx'
 
 const SAVE_KEY = 'hanbyul-save-v2'
 const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)))
@@ -155,6 +156,7 @@ function finishNight(s, out) {
   s.pledge = null
   s.day += 1
   s.hour = 8
+  s.scene = 'room'
   s.consecGames = 0
   s.talkToday = 0
   s.fenceUsedToday = false
@@ -287,6 +289,10 @@ export default function App() {
     if (!g || g.modals.length > 0 || g.phase !== 'normal') return
     const s = S(); const out = O()
     const buff = (b) => (s.activeBuff === b ? 1.2 : 1)
+
+    // 행동에 맞춰 배경 장면 전환 (운동은 공원, 나머지는 방)
+    if (kind === 'soccer' || kind === 'jump') s.scene = 'park'
+    else if (kind !== 'sleep') s.scene = 'room'
 
     if (kind === 'game') {
       doGameCore(s, out)
@@ -544,9 +550,12 @@ export default function App() {
 
   return (
     <div className="min-h-screen flex justify-center transition-all duration-1000" style={{ background: skyOf(g.hour, g.day) }}>
-      {isNight && <NightStars />}
+      {isNight && g.tab !== 'home' && <NightStars />}
 
-      <div className={`w-full max-w-[420px] min-h-screen flex flex-col p-3 pb-20 relative ${g.stats.popcorn > 70 ? 'anim-softshake' : ''}`}>
+      <div className={`w-full max-w-[420px] min-h-screen flex flex-col p-3 pb-20 relative isolate ${g.stats.popcorn > 70 ? 'anim-softshake' : ''}`}>
+
+        {/* ===== 배경 장면 (방 / 공원) ===== */}
+        {g.tab === 'home' && <Scene scene={g.scene} hour={g.hour} day={g.day} />}
 
         {/* ===== 상단 정보 ===== */}
         <div className="bg-white/90 rounded-2xl shadow-lg p-3">
@@ -578,7 +587,7 @@ export default function App() {
         {g.tab === 'home' && (
           <>
             {/* 캐릭터 */}
-            <div className="flex-1 flex flex-col items-center justify-center relative min-h-56">
+            <div className="flex-1 flex flex-col items-center justify-end pb-2 relative min-h-56">
               {g.combo >= 2 && (
                 <div key={g.combo} className="anim-combo absolute top-2 bg-orange-500 text-white px-4 py-1 rounded-full shadow-lg text-lg z-10">
                   🔥 {g.combo}연속 콤보!
@@ -701,7 +710,8 @@ function CharacterFace({ stats, sparkle }) {
         </>
       )}
       <Hanbyul mood={mood} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
-      <div className="mt-2 bg-white/85 text-slate-600 text-xs px-3 py-1 rounded-full shadow">한별: {caption}</div>
+      <div className="w-24 h-3 -mt-1 rounded-[50%] bg-black/20 blur-[3px]" />
+      <div className="mt-1 bg-white/85 text-slate-600 text-xs px-3 py-1 rounded-full shadow">한별: {caption}</div>
     </div>
   )
 }

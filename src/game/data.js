@@ -179,4 +179,5 @@ export const initialGame = {
   modals: [],
   shopSeen: false,
   tab: 'home',
+  scene: 'room',
 }
