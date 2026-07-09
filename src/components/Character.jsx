@@ -204,14 +204,15 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
             {level >= 2 && <path d="M92 22 l8 -12 -1 15 z" />}
           </g>
         )}
-        <path d="M31 80 Q22 28 80 24 Q138 28 129 80 Q123 52 108 49 Q114 37 95 38 Q99 27 80 30 Q61 27 65 38 Q46 37 52 49 Q37 52 31 80 Z"
-          fill={hair} />
-        {/* 앞머리 결 */}
-        <path d="M80 30 Q70 40 60 48" stroke={hairHi} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.55" />
-        <path d="M88 31 Q96 40 104 49" stroke={hairHi} strokeWidth="2.5" fill="none" strokeLinecap="round" opacity="0.55" />
-        {/* 머리 윤기 (공부왕은 단정하게 반짝) */}
-        <path d="M58 40 Q70 33 84 35" stroke={isSmart ? '#b58a5a' : '#8a6a4a'} strokeWidth={isSmart ? 5 : 4} fill="none" strokeLinecap="round" opacity={isSmart ? 0.75 : 0.5} />
-        {isSmart && <path d="M80 28 L80 48" stroke="#2a1d12" strokeWidth="2" opacity="0.4" strokeLinecap="round" />}
+        {/* 머리 (이마를 꽉 덮는 풍성한 앞머리 — 가운데 비지 않게) */}
+        <path d="M30 82 Q18 24 80 20 Q142 24 130 82 Q126 54 108 52 Q95 59 80 56 Q65 59 52 52 Q34 54 30 82 Z" fill={hair} />
+        {/* 앞머리 결 (아래로 흐르는 몇 가닥) */}
+        <path d="M66 30 Q62 44 59 53" stroke={hairHi} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity="0.5" />
+        <path d="M80 28 Q79 43 77 55" stroke={hairHi} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity="0.5" />
+        <path d="M94 30 Q98 44 101 53" stroke={hairHi} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity="0.5" />
+        {/* 정수리 윤기 (윗부분만 살짝) */}
+        <path d="M54 32 Q72 24 94 30" stroke={isSmart ? '#b58a5a' : '#6b4f38'} strokeWidth={isSmart ? 4 : 3.5} fill="none" strokeLinecap="round" opacity={isSmart ? 0.7 : 0.45} />
+        {isSmart && <path d="M80 22 Q83 38 86 52" stroke="#2a1d12" strokeWidth="2" opacity="0.4" fill="none" strokeLinecap="round" />}
         {/* 운동왕 = 빨간 머리띠 (이마 위, 눈보다 위에) */}
         {isFit && (
           <>
