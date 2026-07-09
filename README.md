@@ -19,3 +19,8 @@ npm run dev
 
 React + Tailwind CSS + Vite. 외부 리소스 없이 이모지/CSS/Web Audio만 사용.
 진행 상황은 localStorage에 자동 저장됩니다.
+
+## 🛠 이어서 개발하려면
+
+**[작업현황.md](작업현황.md)** 를 먼저 보세요. 코드 위치, 캐릭터 SVG 좌표 치트시트,
+아이템 추가법, 배포법, 알려진 이슈, 다음 할 일이 정리돼 있습니다.
