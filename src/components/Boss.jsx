@@ -6,22 +6,22 @@ import { sfx } from '../game/sound.js'
 export function MidBoss({ fast, onEnd }) {
   const [stage, setStage] = useState('intro') // intro | play | result
   const [score, setScore] = useState(0)
-  const [timeLeft, setTimeLeft] = useState(10)
+  const [timeLeft, setTimeLeft] = useState(12)
   const [targets, setTargets] = useState([])
   const idRef = useRef(0)
 
   useEffect(() => {
     if (stage !== 'play') return
-    const spawnMs = fast ? 420 : 550
-    const life = fast ? 700 : 900
+    const spawnMs = fast ? 680 : 820   // 천천히 등장
+    const life = fast ? 1300 : 1650    // 더 오래 머무름 → 누르기 쉽게
     const spawn = setInterval(() => {
       const id = ++idRef.current
-      const t = { id, x: 6 + Math.random() * 78, y: 15 + Math.random() * 60, type: Math.random() < 0.28 ? 'phone' : 'star' }
+      const t = { id, x: 8 + Math.random() * 70, y: 16 + Math.random() * 58, type: Math.random() < 0.25 ? 'phone' : 'star' }
       setTargets((ts) => [...ts, t])
       setTimeout(() => setTargets((ts) => ts.filter((v) => v.id !== id)), life)
     }, spawnMs)
     const timer = setInterval(() => setTimeLeft((t) => Math.max(0, t - 1)), 1000)
-    const end = setTimeout(() => { setStage('result'); sfx.boss() }, 10000)
+    const end = setTimeout(() => { setStage('result'); sfx.boss() }, 12000)
     return () => { clearInterval(spawn); clearInterval(timer); clearTimeout(end) }
   }, [stage, fast])
 
@@ -31,7 +31,7 @@ export function MidBoss({ fast, onEnd }) {
     else { setScore((s) => s - 2); sfx.miss() }
   }
 
-  const win = score >= 8
+  const win = score >= 6
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/95 flex items-center justify-center anim-fadein">
@@ -43,9 +43,9 @@ export function MidBoss({ fast, onEnd }) {
             <div className="bg-slate-800/80 rounded-2xl p-4 mt-4 text-left text-sm text-slate-200 leading-relaxed">
               <p className="text-center text-yellow-300 font-bold mb-2">📖 이렇게 하는 거야</p>
               <p>1️⃣ 화면 여기저기에 <b className="text-yellow-300">⭐(별)</b>이 나타났다 사라져.</p>
-              <p>2️⃣ 별을 <b>빠르게 눌러서</b> 10초 동안 많이 모아!</p>
+              <p>2️⃣ 별을 <b>눌러서</b> 12초 동안 모아! (천천히 떠 있어)</p>
               <p>3️⃣ 가짜 유혹 <b className="text-red-400">📱(폰)</b>은 절대 누르지 마! 누르면 <b className="text-red-400">-2점</b>.</p>
-              <p>4️⃣ <b className="text-yellow-300">⭐ 8개 이상</b> 모으면 몬스터를 물리쳐!</p>
+              <p>4️⃣ <b className="text-yellow-300">⭐ 6개 이상</b> 모으면 몬스터를 물리쳐!</p>
               <div className="mt-2 pt-2 border-t border-slate-600 text-xs text-sky-300">
                 💻 컴퓨터: <b>마우스로 클릭</b> · 📱 폰/태블릿: <b>손가락으로 톡톡</b>
               </div>
@@ -64,14 +64,14 @@ export function MidBoss({ fast, onEnd }) {
               <div className="text-5xl font-bold text-yellow-300">{timeLeft}</div>
               <div className="text-white text-lg">⭐ {score}점</div>
               <div className="w-56 h-2 bg-slate-700 rounded-full overflow-hidden">
-                <div className="h-full bg-yellow-400 transition-all duration-1000" style={{ width: `${timeLeft * 10}%` }} />
+                <div className="h-full bg-yellow-400 transition-all duration-1000" style={{ width: `${(timeLeft / 12) * 100}%` }} />
               </div>
               <div className="mt-1 bg-black/40 text-xs text-white px-3 py-1 rounded-full">⭐ 누르기! · 📱 누르지 마!</div>
             </div>
             <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-6xl anim-wobble opacity-60 pointer-events-none">👾</div>
             {targets.map((t) => (
               <button key={t.id} onPointerDown={() => tap(t)}
-                className="absolute text-4xl anim-pop cursor-pointer"
+                className="absolute text-6xl anim-pop cursor-pointer active:scale-90 p-2"
                 style={{ left: `${t.x}%`, top: `${t.y}%` }}>
                 {t.type === 'star' ? '⭐' : '📱'}
               </button>
@@ -109,41 +109,45 @@ export function FinalBoss({ popcorn, onEnd }) {
   const hp = Math.max(0, Math.round(maxHp * (1 - winCount / 3)))
   const finalWin = winCount >= 2
 
-  // ----- R1: 알림 폭탄 -----
+  // ----- R1: 유혹 뻥! 차버리기 (글러브 펀치) -----
   const [notis, setNotis] = useState([])
+  const [pops, setPops] = useState([])   // 펀치 임팩트(글러브+POW)
   const [r1Score, setR1Score] = useState(0)
-  const [r1Time, setR1Time] = useState(10)
+  const [r1Time, setR1Time] = useState(12)
   const notiId = useRef(0)
+  const R1_WIN = 6
 
   useEffect(() => {
     if (stage !== 'r1') return
     const spawn = setInterval(() => {
       const id = ++notiId.current
-      const tempt = Math.random() < 0.68
+      const tempt = Math.random() < 0.72
       const pool = tempt ? TEMPT_NOTIS : REAL_NOTIS
-      const n = { id, tempt, text: pool[Math.floor(Math.random() * pool.length)], x: 4 + Math.random() * 60 }
+      const n = { id, tempt, text: pool[Math.floor(Math.random() * pool.length)], x: 8 + Math.random() * 64, y: 22 + Math.random() * 48 }
       setNotis((ns) => [...ns, n])
-      setTimeout(() => setNotis((ns) => ns.filter((v) => v.id !== id)), 3400)
-    }, 700)
+      setTimeout(() => setNotis((ns) => ns.filter((v) => v.id !== id)), 2100) // 천천히 떠 있음
+    }, 780)
     const timer = setInterval(() => setR1Time((t) => Math.max(0, t - 1)), 1000)
-    const end = setTimeout(() => {
-      clearInterval(spawn)
-      setStage('r1res')
-    }, 10500)
+    const end = setTimeout(() => { clearInterval(spawn); setStage('r1res') }, 12000)
     return () => { clearInterval(spawn); clearInterval(timer); clearTimeout(end) }
   }, [stage])
 
   useEffect(() => {
     if (stage === 'r1res') {
-      setWins((w) => [...w, r1Score >= 6])
-      if (r1Score >= 6) sfx.good(); else sfx.bad()
+      setWins((w) => [...w, r1Score >= R1_WIN])
+      if (r1Score >= R1_WIN) sfx.good(); else sfx.bad()
     }
   }, [stage]) // eslint-disable-line
 
-  const tapNoti = (n) => {
+  const POW = ['뻥!', '퍽!', '펑!', '쾅!']
+  const punch = (n) => {
     setNotis((ns) => ns.filter((v) => v.id !== n.id))
+    const pid = ++notiId.current
+    const dx = (Math.random() - 0.5) * 220, dy = -60 - Math.random() * 120
+    setPops((p) => [...p, { id: pid, x: n.x, y: n.y, tempt: n.tempt, word: n.tempt ? POW[Math.floor(Math.random() * POW.length)] : '앗!', dx, dy }])
+    setTimeout(() => setPops((p) => p.filter((v) => v.id !== pid)), 550)
     if (n.tempt) { setR1Score((s) => s + 1); sfx.hit() }
-    else { setR1Score((s) => s - 1); sfx.miss() }
+    else { setR1Score((s) => Math.max(0, s - 1)); sfx.miss() }
   }
 
   // ----- R2: OX 퀴즈 -----
@@ -255,7 +259,7 @@ export function FinalBoss({ popcorn, onEnd }) {
             </p>
             <div className="mt-4 bg-slate-800/80 rounded-2xl p-3 text-left text-xs text-slate-300 leading-relaxed">
               <p>⚔️ <b className="text-white">3라운드 중 2번 이기면</b> 승리!</p>
-              <p>1️⃣ 알림 폭탄 · 2️⃣ OX 퀴즈 · 3️⃣ 집중의 5초</p>
+              <p>1️⃣ 유혹 뻥차기 🥊 · 2️⃣ OX 퀴즈 · 3️⃣ 집중의 5초</p>
               <p>👹 보스 HP = 50 + 내 팝콘 지수 = <b className="text-red-400">{maxHp}</b></p>
               <p className="text-purple-300">일주일 동안 팝콘 지수를 잘 관리했다면 쉬운 싸움이 될 거야.</p>
               <p className="mt-1 pt-1 border-t border-slate-600 text-sky-300">💻 컴퓨터는 마우스로, 📱 폰은 손가락으로 하면 돼!</p>
@@ -270,17 +274,24 @@ export function FinalBoss({ popcorn, onEnd }) {
         {stage === 'r1' && (
           <div className="absolute inset-0 pt-16">
             <div className="text-center text-white z-10 relative pointer-events-none">
-              <p className="text-sm text-purple-300">ROUND 1 · 알림 폭탄</p>
-              <p className="text-xs text-slate-400">📥 위에서 떨어지는 알림 중, <b className="text-pink-300">유혹 알림</b>만 눌러서 없애!<br /><b className="text-white">진짜 알림</b>(숙제·엄마)은 누르면 감점이야!</p>
+              <p className="text-sm text-purple-300">ROUND 1 · 유혹 뻥! 차버리기 🥊</p>
+              <p className="text-xs text-slate-400"><b className="text-pink-300">유혹</b>(광고·게임·영상)이 뜨면 <b className="text-yellow-300">탭해서 뻥 차버려!</b><br /><b className="text-white">진짜 알림</b>(📚숙제·👩엄마)은 소중하니까 <b>치지 마!</b> (-1점)</p>
               <div className="text-4xl font-bold text-yellow-300 mt-1">{r1Time}</div>
-              <p className="text-lg">✅ {r1Score}점 <span className="text-xs text-slate-400">(6점 이상 승리)</span></p>
+              <p className="text-lg">🥊 {r1Score}점 <span className="text-xs text-slate-400">({R1_WIN}점 이상 승리)</span></p>
             </div>
             {notis.map((n) => (
-              <button key={n.id} onPointerDown={() => tapNoti(n)}
-                className={`absolute anim-fall px-3 py-2 rounded-xl text-xs shadow-lg whitespace-nowrap ${n.tempt ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white' : 'bg-white text-slate-800 border-2 border-blue-400'}`}
-                style={{ left: `${n.x}%`, top: 0 }}>
+              <button key={n.id} onPointerDown={() => punch(n)}
+                className={`absolute anim-pop px-3 py-2 rounded-xl text-sm shadow-lg whitespace-nowrap active:scale-90 ${n.tempt ? 'bg-gradient-to-r from-pink-500 to-orange-400 text-white' : 'bg-white text-slate-800 border-2 border-blue-400'}`}
+                style={{ left: `${n.x}%`, top: `${n.y}%` }}>
                 {n.text}
               </button>
+            ))}
+            {pops.map((p) => (
+              <div key={p.id} className="absolute pointer-events-none" style={{ left: `${p.x}%`, top: `${p.y}%` }}>
+                <div className="anim-glove text-5xl" style={{ position: 'absolute', left: 0, top: 0 }}>🥊</div>
+                <div className="anim-punch text-4xl" style={{ position: 'absolute', left: 0, top: 0 }}>💥</div>
+                <div className={`anim-punch font-bold text-2xl ${p.tempt ? 'text-yellow-300' : 'text-red-400'}`} style={{ position: 'absolute', left: '20px', top: '-10px' }}>{p.word}</div>
+              </div>
             ))}
           </div>
         )}

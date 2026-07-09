@@ -10,6 +10,7 @@ import { MidBoss, FinalBoss } from './components/Boss.jsx'
 import Ending, { Confetti } from './components/Ending.jsx'
 import { Hanbyul } from './components/Character.jsx'
 import Scene from './components/Scene.jsx'
+import ArcadeGame from './components/ArcadeGame.jsx'
 
 const SAVE_KEY = 'hanbyul-save-v2'
 const clamp = (v) => Math.max(0, Math.min(100, Math.round(v)))
@@ -258,14 +259,23 @@ export default function App() {
   }
 
   /* ---------- 행동 ---------- */
-  function doGameCore(s, out) {
+  // 게임하기: 막혀있지 않으면 실제 미니게임(아케이드)을 띄운다. 성공 시 true.
+  function tryLaunchGame(s, out) {
     if (s.equipped.includes('screentime') && s.hour >= 21) {
-      out.toasts.push('⏳ 스크린 타임: 21시 이후엔 게임 잠금!'); out.sfx.push('bad'); return
+      out.toasts.push('⏳ 스크린 타임: 21시 이후엔 게임 잠금!'); out.sfx.push('bad'); return false
     }
     if (s.equipped.includes('familylink') && s.consecGames >= 2) {
-      out.toasts.push('🛡️ 패밀리 링크가 3연속 게임을 막았어요!'); out.sfx.push('bad'); return
+      out.toasts.push('🛡️ 패밀리 링크가 3연속 게임을 막았어요!'); out.sfx.push('bad'); return false
     }
     if (s.consecGames >= 2) out.jiwoo = JIWOO_GAME_WARN
+    s.scene = 'room'
+    s.phase = 'arcade'
+    out.sfx.push('click')
+    return true
+  }
+
+  // 미니게임이 끝난 뒤 실제 스탯/연속 효과를 적용 (하면 할수록 재미↓ 팝콘↑)
+  function applyGamePlay(s, out) {
     const tier = Math.min(s.consecGames, 2)
     const fx = [
       { happy: 15, popcorn: 8, health: -5 },
@@ -280,7 +290,6 @@ export default function App() {
     s.counters.totalGames += 1
     s.todayActions.push('game')
     s.hour += 1
-    out.sfx.push('click')
     afterAction(s, out)
     if (s.phase === 'normal' && s.hour < 24) s.modals.push({ type: 'oneMore' })
   }
@@ -295,7 +304,9 @@ export default function App() {
     else if (kind !== 'sleep') s.scene = 'room'
 
     if (kind === 'game') {
-      doGameCore(s, out)
+      tryLaunchGame(s, out)
+      setG(s); flush(out)
+      return
     } else if (kind === 'soccer' || kind === 'jump') {
       if (s.stats.health < 30) { out.toasts.push('😩 너무 지쳐서 운동을 못 하겠어…'); setG(s); flush(out); return }
       const base = kind === 'soccer' ? { health: 15, popcorn: -10, happy: 8 } : { health: 8, popcorn: -6, happy: 4 }
@@ -426,7 +437,16 @@ export default function App() {
   function oneMore() {
     const s = S(); const out = O()
     s.modals.shift()
-    doGameCore(s, out)
+    tryLaunchGame(s, out) // "한 판 더!" → 미니게임 다시 실행 (막히면 토스트만)
+    checkBadges(s, out)
+    setG(s); flush(out)
+  }
+
+  // 게임하기 미니게임 종료 → 스탯 적용
+  function arcadeEnd() {
+    const s = S(); const out = O()
+    s.phase = 'normal'
+    applyGamePlay(s, out)
     checkBadges(s, out)
     setG(s); flush(out)
   }
@@ -658,6 +678,7 @@ export default function App() {
       </div>
 
       {/* ===== 보스전 ===== */}
+      {g.phase === 'arcade' && <ArcadeGame tier={Math.min(g.consecGames, 2)} onEnd={arcadeEnd} />}
       {g.phase === 'midboss' && <MidBoss fast={g.stats.popcorn >= 70} onEnd={midBossEnd} />}
       {g.phase === 'finalboss' && <FinalBoss popcorn={g.stats.popcorn} onEnd={finalBossEnd} />}
     </div>
