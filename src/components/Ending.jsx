@@ -96,7 +96,7 @@ function ReportCard({ g, accent }) {
           </div>
         )}
       </div>
-      <p className="text-center text-[10px] text-slate-400 mt-3">📸 캡처해서 친구들과 비교해 봐!</p>
+      <p className="text-center text-[0.625rem] text-slate-400 mt-3">📸 캡처해서 친구들과 비교해 봐!</p>
     </div>
   )
 }
@@ -143,7 +143,7 @@ export default function Ending({ g, onRestart }) {
   if (type === 'bad') {
     return (
       <div className="min-h-screen bg-black flex justify-center anim-flicker" style={{ filter: 'grayscale(0.9)' }}>
-        <div className="w-full max-w-[420px] p-6 flex flex-col items-center justify-center text-center min-h-screen">
+        <div className="w-full max-w-[26rem] p-6 flex flex-col items-center justify-center text-center min-h-screen">
           <div className="text-8xl anim-wobble">🍿</div>
           <h1 className="text-3xl text-red-500 mt-6 anim-glitch">BAD ENDING</h1>
           <p className="text-slate-300 mt-6 whitespace-pre-line text-sm leading-loose min-h-24 font-mono">{badText}<span className="animate-pulse">▌</span></p>
@@ -185,7 +185,7 @@ export default function Ending({ g, onRestart }) {
   return (
     <div className="min-h-screen flex justify-center" style={{ background: conf.bg }}>
       {conf.confetti > 0 && <Confetti n={conf.confetti} />}
-      <div className="w-full max-w-[420px] p-5 flex flex-col items-center text-center">
+      <div className="w-full max-w-[26rem] p-5 flex flex-col items-center text-center">
         <div className="text-8xl mt-10 anim-pop">{conf.icon}</div>
         <h1 className="text-3xl mt-4 text-slate-800 anim-pop">{conf.title}</h1>
         <p className="text-slate-600 mt-3 text-sm whitespace-pre-line leading-relaxed">{conf.sub}</p>

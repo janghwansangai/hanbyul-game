@@ -35,7 +35,7 @@ export function MidBoss({ fast, onEnd }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/95 flex items-center justify-center anim-fadein">
-      <div className="w-full max-w-[420px] h-full relative flex flex-col items-center justify-center p-4 select-none">
+      <div className="w-full max-w-[26rem] h-full relative flex flex-col items-center justify-center p-4 select-none">
         {stage === 'intro' && (
           <div className="text-center anim-pop">
             <div className="text-8xl anim-wobble">👾</div>
@@ -231,7 +231,7 @@ export function FinalBoss({ popcorn, onEnd }) {
 
   return (
     <div className="fixed inset-0 z-50 bg-gradient-to-b from-purple-950 via-slate-950 to-black flex items-center justify-center anim-fadein">
-      <div className="w-full max-w-[420px] h-full relative flex flex-col items-center justify-center p-4 select-none overflow-hidden">
+      <div className="w-full max-w-[26rem] h-full relative flex flex-col items-center justify-center p-4 select-none overflow-hidden">
 
         {/* 보스 HP 바 (인트로/최종 제외 상시 표시) */}
         {stage !== 'intro' && stage !== 'final' && (
@@ -320,7 +320,7 @@ export function FinalBoss({ popcorn, onEnd }) {
           <div className="w-full text-center relative">
             <p className="text-sm text-purple-300">ROUND 3 · 집중의 5초</p>
             <p className="text-xs text-slate-400 mb-1">아래 동그란 버튼을 <b className="text-white">5초 동안 계속 누르고 있어!</b></p>
-            <p className="text-[11px] text-sky-300 mb-4">💻 마우스로 누른 채 그대로 · 📱 손가락으로 꾹 누른 채 그대로<br />중간에 광고가 튀어나와도 <b className="text-white">손을 떼지 마!</b></p>
+            <p className="text-[0.6875rem] text-sky-300 mb-4">💻 마우스로 누른 채 그대로 · 📱 손가락으로 꾹 누른 채 그대로<br />중간에 광고가 튀어나와도 <b className="text-white">손을 떼지 마!</b></p>
             <div className="w-full h-4 bg-slate-800 rounded-full overflow-hidden mb-6">
               <div className="h-full bg-gradient-to-r from-green-400 to-yellow-300" style={{ width: `${(holdMs / 5000) * 100}%` }} />
             </div>

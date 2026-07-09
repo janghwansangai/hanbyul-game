@@ -552,7 +552,7 @@ export default function App() {
     <div className="min-h-screen flex justify-center transition-all duration-1000" style={{ background: skyOf(g.hour, g.day) }}>
       {isNight && g.tab !== 'home' && <NightStars />}
 
-      <div className={`w-full max-w-[420px] min-h-screen flex flex-col p-3 pb-20 relative isolate ${g.stats.popcorn > 70 ? 'anim-softshake' : ''}`}>
+      <div className={`w-full max-w-[26rem] min-h-screen flex flex-col p-3 pb-20 relative isolate ${g.stats.popcorn > 70 ? 'anim-softshake' : ''}`}>
 
         {/* ===== 배경 장면 (방 / 공원) ===== */}
         {g.tab === 'home' && <Scene scene={g.scene} hour={g.hour} day={g.day} />}
@@ -568,7 +568,7 @@ export default function App() {
             <div className="flex-1 h-1.5 bg-slate-200 rounded-full overflow-hidden">
               <div className="h-full bg-indigo-400 transition-all duration-500" style={{ width: `${xpPct(g.xp)}%` }} />
             </div>
-            <span className="text-[10px] text-slate-400">Lv.{g.level}</span>
+            <span className="text-[0.625rem] text-slate-400">Lv.{g.level}</span>
           </div>
           <div className="mt-2 space-y-1.5">
             {Object.entries(STAT_META).map(([k, m]) => (
@@ -625,7 +625,7 @@ export default function App() {
         {g.tab === 'badge' && <BadgePanel g={g} />}
 
         {/* ===== 하단 네비 ===== */}
-        <nav className="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-[420px] bg-white/95 border-t border-slate-200 flex shadow-2xl z-30">
+        <nav className="fixed bottom-0 inset-x-0 mx-auto w-full max-w-[26rem] bg-white/95 border-t border-slate-200 flex shadow-2xl z-30">
           {[['home', '🏠', '홈'], ['shop', '🛍️', '상점'], ['badge', '🏅', '뱃지']].map(([id, icon, label]) => (
             <button key={id} onClick={() => setTab(id)}
               disabled={id === 'shop' && g.day < 2}
@@ -638,7 +638,7 @@ export default function App() {
 
         {/* ===== 지우 ===== */}
         {jiwoo && (
-          <div className="fixed bottom-20 right-2 z-40 anim-slidein flex items-end gap-1 max-w-[280px]">
+          <div className="fixed bottom-20 right-2 z-40 anim-slidein flex items-end gap-1 max-w-[17.5rem]">
             <div className="bg-white rounded-2xl rounded-br-none shadow-xl p-3 text-xs text-slate-700 border-2 border-yellow-300">
               <b className="text-yellow-600">지우:</b> {jiwoo}
             </div>
@@ -647,7 +647,7 @@ export default function App() {
         )}
 
         {/* ===== 토스트 ===== */}
-        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[70] space-y-1.5 w-[90%] max-w-[380px] pointer-events-none">
+        <div className="fixed top-3 inset-x-0 mx-auto z-[70] space-y-1.5 w-[90%] max-w-[24rem] pointer-events-none">
           {toasts.map((t) => (
             <div key={t.id} className="anim-pop bg-slate-800/95 text-white text-sm rounded-xl px-4 py-2.5 shadow-xl text-center">{t.text}</div>
           ))}
@@ -684,7 +684,7 @@ function xpPct(xp) {
 
 function NightStars() {
   const stars = useMemo(() => Array.from({ length: 28 }, (_, i) => ({
-    id: i, x: Math.random() * 100, y: Math.random() * 55, d: Math.random() * 2, s: Math.random() > 0.7 ? 'text-sm' : 'text-[8px]',
+    id: i, x: Math.random() * 100, y: Math.random() * 55, d: Math.random() * 2, s: Math.random() > 0.7 ? 'text-sm' : 'text-[0.5rem]',
   })), [])
   return (
     <div className="fixed inset-0 pointer-events-none overflow-hidden">
@@ -722,8 +722,8 @@ function ActionBtn({ icon, label, sub, onClick, disabled, note }) {
       className={`relative bg-white/90 rounded-2xl shadow-lg p-2.5 flex flex-col items-center gap-0.5 transition active:scale-95 ${disabled ? 'opacity-40' : 'hover:bg-white'}`}>
       <span className="text-2xl">{icon}</span>
       <span className="text-xs text-slate-700 font-bold">{label}</span>
-      <span className="text-[9px] text-slate-400">{sub}</span>
-      {note && <span className="absolute -top-1.5 -right-1 bg-rose-500 text-white text-[8px] px-1.5 py-0.5 rounded-full shadow">{note}</span>}
+      <span className="text-[0.56rem] text-slate-400">{sub}</span>
+      {note && <span className="absolute -top-1.5 -right-1 bg-rose-500 text-white text-[0.5rem] px-1.5 py-0.5 rounded-full shadow">{note}</span>}
     </button>
   )
 }
@@ -731,7 +731,7 @@ function ActionBtn({ icon, label, sub, onClick, disabled, note }) {
 function TitleScreen({ hasSave, onNew, onContinue }) {
   return (
     <div className="min-h-screen flex justify-center" style={{ background: 'linear-gradient(180deg,#fbcfe8,#bae6fd,#a5f3fc)' }}>
-      <div className="w-full max-w-[420px] flex flex-col items-center justify-center p-6 text-center">
+      <div className="w-full max-w-[26rem] flex flex-col items-center justify-center p-6 text-center">
         <p className="text-slate-500 text-sm">진짜 레벨업</p>
         <h1 className="text-4xl text-slate-800 mt-1 leading-snug">🌟 한별이 키우기</h1>
         <Hanbyul mood="good" className="w-40 h-40 mt-8 anim-bouncey" />
@@ -749,7 +749,7 @@ function TitleScreen({ hasSave, onNew, onContinue }) {
             </button>
           )}
         </div>
-        <p className="text-[10px] text-slate-400 mt-6">인터넷·스마트폰 과의존 예방 교육 게임</p>
+        <p className="text-[0.625rem] text-slate-400 mt-6">인터넷·스마트폰 과의존 예방 교육 게임</p>
       </div>
     </div>
   )
@@ -769,7 +769,7 @@ function ShopPanel({ g, onBuy, onToggle }) {
             <span className="text-3xl">{it.icon}</span>
             <div className="flex-1">
               <p className="text-sm text-slate-800 font-bold">{it.name}</p>
-              <p className="text-[10px] text-slate-500">{it.desc}</p>
+              <p className="text-[0.625rem] text-slate-500">{it.desc}</p>
             </div>
             {owned ? (
               <button onClick={() => onToggle(it.id)}
@@ -800,7 +800,7 @@ function BadgePanel({ g }) {
             <div key={b.id} className={`rounded-2xl p-3 text-center shadow-lg ${got ? 'bg-gradient-to-b from-yellow-50 to-amber-100 border-2 border-yellow-300' : 'bg-white/60'}`}>
               <div className={`text-4xl ${got ? 'animate-pulse' : 'grayscale opacity-30'}`}>{got || !b.hidden ? b.icon : '❓'}</div>
               <p className={`text-sm mt-1 ${got ? 'text-amber-700 font-bold' : 'text-slate-400'}`}>{!got && b.hidden ? '???' : b.name}</p>
-              <p className="text-[9px] text-slate-400 mt-0.5">{!got && b.hidden ? '숨겨진 뱃지야!' : b.desc}</p>
+              <p className="text-[0.56rem] text-slate-400 mt-0.5">{!got && b.hidden ? '숨겨진 뱃지야!' : b.desc}</p>
             </div>
           )
         })}
@@ -814,7 +814,7 @@ function BadgePanel({ g }) {
 function Modal({ children, flip }) {
   return (
     <div className="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className={`w-full max-w-[380px] bg-white rounded-3xl shadow-2xl p-5 ${flip ? 'anim-flip' : 'anim-pop'}`}>
+      <div className={`w-full max-w-[24rem] bg-white rounded-3xl shadow-2xl p-5 ${flip ? 'anim-flip' : 'anim-pop'}`}>
         {children}
       </div>
     </div>
@@ -887,7 +887,7 @@ function ModalHost({ g, modal, handlers }) {
             <div className="text-4xl">📵</div>
             <h3 className="text-lg mt-2 text-slate-800">어제의 진짜 미션, 해냈어?</h3>
             <p className="text-sm bg-amber-50 rounded-2xl p-3 mt-2 text-amber-800">"{modal.mission}"</p>
-            <p className="text-[10px] text-slate-400 mt-2">🤝 양심껏! 진짜 해낸 사람만 눌러 줘.</p>
+            <p className="text-[0.625rem] text-slate-400 mt-2">🤝 양심껏! 진짜 해낸 사람만 눌러 줘.</p>
             <div className="flex gap-2 mt-3">
               <button onClick={() => missionCheck(true)} className="flex-1 py-3 bg-green-500 text-white rounded-2xl active:scale-95 transition">해냈어요! (+30P)</button>
               <button onClick={() => missionCheck(false)} className="flex-1 py-3 bg-slate-200 text-slate-600 rounded-2xl active:scale-95 transition">못 했어요</button>
@@ -902,7 +902,7 @@ function ModalHost({ g, modal, handlers }) {
           <div className="text-center">
             <div className="text-4xl">📋</div>
             <h3 className="text-lg mt-2 text-slate-800">오늘의 진짜 미션</h3>
-            <p className="text-[10px] text-slate-400">게임 밖 진짜 세상에서 도전!</p>
+            <p className="text-[0.625rem] text-slate-400">게임 밖 진짜 세상에서 도전!</p>
             <p className="text-sm bg-amber-50 rounded-2xl p-3 mt-2 text-amber-800 font-bold">"{modal.mission}"</p>
             <p className="text-xs text-slate-500 mt-2">내일 아침에 확인할게. 성공하면 <b>+30P</b>!</p>
             <button onClick={ackModal} className="mt-4 w-full py-3 bg-amber-500 text-white rounded-2xl active:scale-95 transition">도전!</button>
@@ -943,7 +943,7 @@ function ModalHost({ g, modal, handlers }) {
               한별이가 이불 속에서 몰래 폰을 켰다…<br />
               <span className="text-red-400">🍿 팝콘 지수 +20</span>
             </p>
-            <p className="text-[10px] text-slate-500 mt-2">💡 행복이 너무 낮으면 이런 일이 생겨. 무조건 참는 게 답이 아니야!</p>
+            <p className="text-[0.625rem] text-slate-500 mt-2">💡 행복이 너무 낮으면 이런 일이 생겨. 무조건 참는 게 답이 아니야!</p>
             <button onClick={ackModal} className="mt-4 w-full py-3 bg-slate-700 text-white rounded-2xl active:scale-95 transition">…아침이 밝았다</button>
           </div>
         </Modal>
@@ -1020,7 +1020,7 @@ function EventModal({ g, ev, onChoose }) {
 function OneMoreModal({ g, onMore, onQuit }) {
   // 다크패턴 재현: 연속할수록 '그만하기'가 작아진다 (최대 2단계)
   const stage = Math.min(Math.max(g.consecGames - 1, 0), 2)
-  const quitCls = ['text-sm px-5 py-2.5', 'text-xs px-4 py-2 translate-x-3', 'text-[10px] px-3 py-1.5 translate-x-6'][stage]
+  const quitCls = ['text-sm px-5 py-2.5', 'text-xs px-4 py-2 translate-x-3', 'text-[0.625rem] px-3 py-1.5 translate-x-6'][stage]
   const famBlock = g.equipped.includes('familylink') && g.consecGames >= 2
   return (
     <Modal>
@@ -1034,7 +1034,7 @@ function OneMoreModal({ g, onMore, onQuit }) {
             className={`w-full py-4 rounded-2xl text-xl text-white shadow-xl transition active:scale-95 ${famBlock ? 'bg-slate-300' : 'bg-gradient-to-r from-pink-500 via-orange-400 to-yellow-400 animate-pulse'}`}>
             🔥 한 판 더!!
           </button>
-          {famBlock && <p className="text-[10px] text-indigo-500">🛡️ 패밀리 링크 작동 중: 오늘은 여기까지!</p>}
+          {famBlock && <p className="text-[0.625rem] text-indigo-500">🛡️ 패밀리 링크 작동 중: 오늘은 여기까지!</p>}
           <button onClick={onQuit}
             className={`bg-slate-200 text-slate-500 rounded-xl transition active:scale-95 ${quitCls}`}>
             그만하기
