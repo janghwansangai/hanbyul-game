@@ -61,7 +61,7 @@ export const GROWTH_MSG = {
   'messy:2': '🫥 이런, 거지꼴이 됐어! 좀 씻고 나가 놀자!',
 }
 
-export function Hanbyul({ mood = 'normal', look = 'normal', level = 0, className = '', style }) {
+export function Hanbyul({ mood = 'normal', look = 'normal', level = 0, gear = [], className = '', style }) {
   const [, tick] = useState(0)
   useEffect(() => { probeImages(() => tick((n) => n + 1)) }, [])
 
@@ -72,7 +72,7 @@ export function Hanbyul({ mood = 'normal', look = 'normal', level = 0, className
         onError={() => { available[mood] = false; tick((n) => n + 1) }} />
     )
   }
-  return <HanbyulSVG mood={mood} look={look} level={level} className={className} style={style} />
+  return <HanbyulSVG mood={mood} look={look} level={level} gear={gear} className={className} style={style} />
 }
 
 /* ---------- SVG로 그린 한별이 (성장 외형 지원) ---------- */
@@ -89,11 +89,12 @@ function spiralPath(cx, cy) {
   return d
 }
 
-function HanbyulSVG({ mood, look = 'normal', level = 0, className, style }) {
+function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, style }) {
   const line = '#5b4636', hair = '#3b2a1e', hairHi = '#6b4f38'
   const blush = '#ff8fa3', outline = '#e8a97e'
   const showBlink = mood !== 'tired' // 자는 눈엔 깜빡임 없음
   const isFit = look === 'fit', isSmart = look === 'smart', isMessy = look === 'messy'
+  const has = (id) => gear.includes(id)
 
   return (
     <svg viewBox="0 0 160 176" className={`overflow-visible ${className}`} style={style} xmlns="http://www.w3.org/2000/svg">
@@ -113,6 +114,23 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, className, style }) {
           <stop offset="100%" stopColor="#241d33" />
         </radialGradient>
       </defs>
+
+      {/* ===== 등 뒤 장착물 (망토 / 날개) — 몸보다 뒤에 ===== */}
+      {has('cape') && (
+        <g className="anim-idle">
+          <path d="M54 114 Q80 126 106 114 L156 172 Q120 166 118 176 Q100 168 90 176 Q80 168 70 176 Q60 168 42 176 Q40 166 4 172 Z" fill="#7c3aed" stroke="#5b21b6" strokeWidth="1.5" />
+          <path d="M80 120 L80 176" stroke="#5b21b6" strokeWidth="1.5" opacity="0.4" />
+          <path d="M54 114 Q80 126 106 114 L100 126 Q80 134 60 126 Z" fill="#6d28d9" opacity="0.6" />
+        </g>
+      )}
+      {has('wings') && (
+        <g className="anim-idle">
+          <path d="M60 120 Q10 96 8 150 Q34 138 44 154 Q40 128 60 130 Z" fill="#fef9ff" stroke="#e9d5ff" strokeWidth="1.5" />
+          <path d="M100 120 Q150 96 152 150 Q126 138 116 154 Q120 128 100 130 Z" fill="#fef9ff" stroke="#e9d5ff" strokeWidth="1.5" />
+          <path d="M26 128 Q20 140 22 150 M40 132 Q36 144 40 152" stroke="#e9d5ff" strokeWidth="1.2" fill="none" opacity="0.7" />
+          <path d="M134 128 Q140 140 138 150 M120 132 Q124 144 120 152" stroke="#e9d5ff" strokeWidth="1.2" fill="none" opacity="0.7" />
+        </g>
+      )}
 
       {/* ===== 몸 (숨쉬는 애니메이션) — 성장 스타일에 따라 달라짐 ===== */}
       <g className="anim-breathe">
@@ -194,11 +212,11 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, className, style }) {
         {/* 머리 윤기 (공부왕은 단정하게 반짝) */}
         <path d="M58 40 Q70 33 84 35" stroke={isSmart ? '#b58a5a' : '#8a6a4a'} strokeWidth={isSmart ? 5 : 4} fill="none" strokeLinecap="round" opacity={isSmart ? 0.75 : 0.5} />
         {isSmart && <path d="M80 28 L80 48" stroke="#2a1d12" strokeWidth="2" opacity="0.4" strokeLinecap="round" />}
-        {/* 운동왕 = 빨간 머리띠 */}
+        {/* 운동왕 = 빨간 머리띠 (이마 위, 눈보다 위에) */}
         {isFit && (
           <>
-            <path d="M30 66 Q80 52 130 66 L130 76 Q80 62 30 76 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
-            <path d="M126 70 l12 -5 -2 10 z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
+            <path d="M30 52 Q80 38 130 52 L130 62 Q80 48 30 62 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
+            <path d="M126 57 l13 -4 -3 11 z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
           </>
         )}
       </g>
@@ -355,6 +373,66 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, className, style }) {
             <g transform="translate(100 96) rotate(12)"><rect x="-7" y="-4" width="14" height="8" rx="2" fill="#f4d58d" stroke="#d9b45a" strokeWidth="0.8" /><line x1="0" y1="-4" x2="0" y2="4" stroke="#d9b45a" strokeWidth="0.8" /></g>
           )}
         </>
+      )}
+
+      {/* ===== 앞쪽 장착 아이템 (상점에서 구매·장착) ===== */}
+      {/* 목도리 (목·가슴 위) */}
+      {has('scarf') && (
+        <g>
+          <path d="M58 112 Q80 124 102 112 L104 126 Q80 136 56 126 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
+          <path d="M92 124 l11 22 -9 3 -7 -20 z" fill="#dc2626" stroke="#b91c1c" strokeWidth="1" />
+          <path d="M64 118 h32 M60 124 h40" stroke="#b91c1c" strokeWidth="1" opacity="0.4" />
+        </g>
+      )}
+      {/* 금메달 (가슴) */}
+      {has('medal') && (
+        <g>
+          <path d="M72 120 L79 146" stroke="#3b82f6" strokeWidth="5" />
+          <path d="M88 120 L81 146" stroke="#ef4444" strokeWidth="5" />
+          <circle cx="80" cy="152" r="11" fill="#facc15" stroke="#eab308" strokeWidth="2" />
+          <path d="M80 146 l1.9 3.8 4.2 .6-3 3 .7 4.2-3.8-2-3.8 2 .7-4.2-3-3 4.2-.6z" fill="#fff8dc" />
+        </g>
+      )}
+      {/* 선글라스 (눈 위) */}
+      {has('sunglasses') && (
+        <g fill="#1e293b" stroke="#0f172a" strokeWidth="2">
+          <rect x="44" y="65" width="28" height="18" rx="7" />
+          <rect x="88" y="65" width="28" height="18" rx="7" />
+          <line x1="72" y1="70" x2="88" y2="70" strokeWidth="3" />
+          <line x1="44" y1="69" x2="33" y2="66" strokeWidth="3" />
+          <line x1="116" y1="69" x2="127" y2="66" strokeWidth="3" />
+          <path d="M49 69 l10 0" stroke="#94a3b8" strokeWidth="2" fill="none" opacity="0.7" />
+          <path d="M93 69 l10 0" stroke="#94a3b8" strokeWidth="2" fill="none" opacity="0.7" />
+        </g>
+      )}
+      {/* 헤드폰 (머리 위 밴드 + 귀 덮개) */}
+      {has('headphones') && (
+        <g>
+          <path d="M30 78 Q30 24 80 22 Q130 24 130 78" fill="none" stroke="#334155" strokeWidth="7" strokeLinecap="round" />
+          <rect x="22" y="72" width="17" height="26" rx="7" fill="#475569" stroke="#334155" strokeWidth="1.5" />
+          <rect x="121" y="72" width="17" height="26" rx="7" fill="#475569" stroke="#334155" strokeWidth="1.5" />
+          <rect x="26" y="78" width="9" height="14" rx="4" fill="#94a3b8" />
+          <rect x="125" y="78" width="9" height="14" rx="4" fill="#94a3b8" />
+        </g>
+      )}
+      {/* 야구 모자 (머리 위) */}
+      {has('cap') && !has('headphones') && (
+        <g>
+          <path d="M28 54 Q80 20 132 54 Q120 46 80 44 Q40 46 28 54 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="1.5" />
+          <path d="M118 54 q26 -1 30 10 q-18 5 -34 -3 Z" fill="#1d4ed8" stroke="#1e40af" strokeWidth="1" />
+          <circle cx="80" cy="30" r="3.5" fill="#1e40af" />
+          <path d="M80 44 Q80 38 88 35" stroke="#3b82f6" strokeWidth="2" fill="none" opacity="0.6" />
+        </g>
+      )}
+      {/* 황금 왕관 (머리 위) */}
+      {has('crown') && !has('cap') && !has('headphones') && (
+        <g stroke="#d97706" strokeWidth="1.5">
+          <path d="M44 50 L52 26 L66 42 L80 20 L94 42 L108 26 L116 50 Q80 40 44 50 Z" fill="#fbbf24" />
+          <path d="M44 50 Q80 40 116 50 L116 56 Q80 47 44 56 Z" fill="#f59e0b" />
+          <circle cx="80" cy="24" r="3" fill="#ef4444" stroke="#b91c1c" strokeWidth="0.8" />
+          <circle cx="52" cy="30" r="2.5" fill="#60a5fa" stroke="#2563eb" strokeWidth="0.6" />
+          <circle cx="108" cy="30" r="2.5" fill="#60a5fa" stroke="#2563eb" strokeWidth="0.6" />
+        </g>
       )}
     </svg>
   )

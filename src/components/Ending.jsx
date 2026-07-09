@@ -55,7 +55,7 @@ function ReportCard({ g, accent }) {
       <h3 className="text-xl text-center">📋 한별이의 7일 성적표</h3>
       {/* 7일 뒤 진화한 한별이의 모습 */}
       <div className="flex flex-col items-center mt-1">
-        <Hanbyul mood={finalMood} look={look.type} level={look.level} className="w-28 h-28" />
+        <Hanbyul mood={finalMood} look={look.type} level={look.level} gear={g.equipped} className="w-28 h-28" />
         <div className="-mt-1 px-3 py-0.5 rounded-full text-white text-sm font-bold" style={{ background: accent }}>{LOOK_NICK[look.key]}</div>
       </div>
       <p className="text-center text-2xl mt-2">{t.icon} <b>{t.name}</b> <span className="text-sm text-slate-500">Lv.{g.level}</span></p>

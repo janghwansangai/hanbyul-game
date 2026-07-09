@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import {
   WEEKDAYS, TITLES, levelOf, titleOf,
-  EVENTS, FAMILY_EVENT, ITEMS, BADGES, QUIZ,
+  EVENTS, FAMILY_EVENT, ITEMS, COSMETICS, SLOT_OF, BADGES, QUIZ,
   JIWOO_TIPS, JIWOO_GAME_WARN, JIWOO_TRAP_WARN, MISSIONS,
   initialGame,
 } from './game/data.js'
@@ -547,20 +547,27 @@ export default function App() {
   }
 
   /* ---------- 상점 ---------- */
+  // 같은 슬롯의 꾸미기 아이템은 하나만 장착 (모자 쓰면 왕관 벗겨짐 등)
+  function equipInSlot(s, id) {
+    const slot = SLOT_OF[id]
+    if (slot) s.equipped = s.equipped.filter((e) => SLOT_OF[e] !== slot)
+    if (!s.equipped.includes(id)) s.equipped.push(id)
+  }
   function buyItem(item) {
     const s = S(); const out = O()
     if (s.owned.includes(item.id)) return
     if (s.points < item.price) { out.toasts.push('💰 포인트가 부족해!'); out.sfx.push('bad'); setG(s); flush(out); return }
     s.points -= item.price
     s.owned.push(item.id)
-    s.equipped.push(item.id)
+    equipInSlot(s, item.id)
     out.toasts.push(`${item.icon} ${item.name} 구매 & 장착!`)
     out.sfx.push('good')
     setG(s); flush(out)
   }
   function toggleEquip(id) {
     const s = S()
-    s.equipped = s.equipped.includes(id) ? s.equipped.filter((v) => v !== id) : [...s.equipped, id]
+    if (s.equipped.includes(id)) s.equipped = s.equipped.filter((v) => v !== id)
+    else equipInSlot(s, id)
     setG(s)
     sfx.click()
   }
@@ -622,7 +629,7 @@ export default function App() {
                   🔥 {g.combo}연속 콤보!
                 </div>
               )}
-              <CharacterFace stats={g.stats} sparkle={charSparkle} counters={g.counters} />
+              <CharacterFace stats={g.stats} sparkle={charSparkle} counters={g.counters} gear={g.equipped} />
               {g.day === 7 && g.hour >= 14 && (
                 <p className="text-purple-200 text-xs mt-2 anim-fadein bg-black/30 px-3 py-1 rounded-full">⚡ 결전의 기운이 감돈다…</p>
               )}
@@ -725,7 +732,7 @@ function NightStars() {
   )
 }
 
-function CharacterFace({ stats, sparkle, counters }) {
+function CharacterFace({ stats, sparkle, counters, gear }) {
   let mood = 'normal', anim = 'anim-idle', caption = '보통이야~'
   if (stats.popcorn > 70) { mood = 'popcorn'; anim = 'anim-shakehard'; caption = '머리가 팝콘팝콘…' }
   else if (stats.health < 30) { mood = 'tired'; anim = 'anim-sleepy'; caption = '너무 졸리고 지쳤어…' }
@@ -744,7 +751,7 @@ function CharacterFace({ stats, sparkle, counters }) {
           <span className="absolute top-8 -left-9 text-xl anim-sparkle" style={{ animationDelay: '0.4s' }}>⭐</span>
         </>
       )}
-      <Hanbyul mood={mood} look={look.type} level={look.level} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
+      <Hanbyul mood={mood} look={look.type} level={look.level} gear={gear} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
       <div className="w-24 h-3 -mt-1 rounded-[50%] bg-black/20 blur-[3px]" />
       <div className="mt-1 bg-white/85 text-slate-600 text-xs px-3 py-1 rounded-full shadow">한별: {caption}</div>
     </div>
@@ -792,34 +799,40 @@ function TitleScreen({ hasSave, onNew, onContinue }) {
 
 /* ---------- 상점 & 뱃지 패널 ---------- */
 
+function ShopRow({ g, it, onBuy, onToggle }) {
+  const owned = g.owned.includes(it.id)
+  const on = g.equipped.includes(it.id)
+  return (
+    <div className="bg-white/95 rounded-2xl shadow-lg p-3 flex items-center gap-3 transition hover:-translate-y-0.5">
+      <span className="text-3xl">{it.icon}</span>
+      <div className="flex-1">
+        <p className="text-sm text-slate-800 font-bold">{it.name}</p>
+        <p className="text-[0.625rem] text-slate-500">{it.desc}</p>
+      </div>
+      {owned ? (
+        <button onClick={() => onToggle(it.id)}
+          className={`shrink-0 w-14 h-7 rounded-full transition relative ${on ? 'bg-green-400' : 'bg-slate-300'}`}>
+          <span className={`absolute top-1 text-[0.5rem] font-bold ${on ? 'left-1.5 text-white' : 'right-1 text-slate-500'}`}>{on ? '장착' : '해제'}</span>
+          <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-all ${on ? 'left-7' : 'left-0.5'}`} />
+        </button>
+      ) : (
+        <button onClick={() => onBuy(it)}
+          className={`shrink-0 px-3 py-1.5 rounded-xl text-sm text-white active:scale-95 transition ${g.points >= it.price ? 'bg-amber-500' : 'bg-slate-300'}`}>
+          {it.price}P
+        </button>
+      )}
+    </div>
+  )
+}
+
 function ShopPanel({ g, onBuy, onToggle }) {
   return (
     <div className="flex-1 mt-3 space-y-2 overflow-y-auto">
-      <h2 className="text-white text-lg drop-shadow">🛍️ 상점 <span className="text-xs opacity-80">좋은 선택으로 포인트를 모아 봐!</span></h2>
-      {ITEMS.map((it) => {
-        const owned = g.owned.includes(it.id)
-        const on = g.equipped.includes(it.id)
-        return (
-          <div key={it.id} className="bg-white/95 rounded-2xl shadow-lg p-3 flex items-center gap-3 transition hover:-translate-y-0.5">
-            <span className="text-3xl">{it.icon}</span>
-            <div className="flex-1">
-              <p className="text-sm text-slate-800 font-bold">{it.name}</p>
-              <p className="text-[0.625rem] text-slate-500">{it.desc}</p>
-            </div>
-            {owned ? (
-              <button onClick={() => onToggle(it.id)}
-                className={`w-12 h-7 rounded-full transition relative ${on ? 'bg-green-400' : 'bg-slate-300'}`}>
-                <span className={`absolute top-0.5 w-6 h-6 bg-white rounded-full shadow transition-all ${on ? 'left-5' : 'left-0.5'}`} />
-              </button>
-            ) : (
-              <button onClick={() => onBuy(it)}
-                className={`px-3 py-1.5 rounded-xl text-sm text-white active:scale-95 transition ${g.points >= it.price ? 'bg-amber-500' : 'bg-slate-300'}`}>
-                {it.price}P
-              </button>
-            )}
-          </div>
-        )
-      })}
+      <h2 className="text-white text-lg drop-shadow">🛍️ 상점 <span className="text-xs opacity-80">💰 {g.points}P</span></h2>
+      <p className="text-white/90 text-sm font-bold mt-1">🎽 꾸미기 아이템 <span className="text-xs opacity-80 font-normal">사서 장착하면 한별이 몸에 나타나요!</span></p>
+      {COSMETICS.map((it) => <ShopRow key={it.id} g={g} it={it} onBuy={onBuy} onToggle={onToggle} />)}
+      <p className="text-white/90 text-sm font-bold mt-3">🛡️ 관리 도구 <span className="text-xs opacity-80 font-normal">게임 조절을 도와줘요</span></p>
+      {ITEMS.map((it) => <ShopRow key={it.id} g={g} it={it} onBuy={onBuy} onToggle={onToggle} />)}
     </div>
   )
 }

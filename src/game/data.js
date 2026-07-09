@@ -90,6 +90,23 @@ export const ITEMS = [
   { id: 'blanket', icon: '🛏️', name: '구름 이불', price: 60, desc: '취침 회복 +10, 충동 폭발 확률 절반' },
 ]
 
+// ===== 꾸미기 아이템 (장착하면 한별이 몸에 실제로 그려짐) =====
+// slot: 같은 슬롯끼리는 하나만 장착됨 (head/eyes/neck/chest/back)
+export const COSMETICS = [
+  { id: 'cap', icon: '🧢', name: '야구 모자', price: 40, slot: 'head', desc: '멋진 파란 모자를 써요' },
+  { id: 'headphones', icon: '🎧', name: '헤드폰', price: 60, slot: 'head', desc: '힙한 헤드폰 장착!' },
+  { id: 'crown', icon: '👑', name: '황금 왕관', price: 130, slot: 'head', desc: '오늘부터 나는 왕!' },
+  { id: 'sunglasses', icon: '🕶️', name: '선글라스', price: 50, slot: 'eyes', desc: '스타일리시하게 쓱' },
+  { id: 'scarf', icon: '🧣', name: '빨간 목도리', price: 45, slot: 'neck', desc: '따뜻하고 귀엽게' },
+  { id: 'medal', icon: '🥇', name: '금메달', price: 80, slot: 'chest', desc: '자랑스러운 금메달' },
+  { id: 'cape', icon: '🦸', name: '슈퍼 망토', price: 100, slot: 'back', desc: '절제 히어로 망토 휘날려!' },
+  { id: 'wings', icon: '🪽', name: '천사 날개', price: 120, slot: 'back', desc: '등 뒤에서 반짝이는 날개' },
+]
+
+// 슬롯 조회 (장착 시 같은 슬롯 자동 교체용)
+export const SLOT_OF = Object.fromEntries(COSMETICS.map((c) => [c.id, c.slot]))
+export const COSMETIC_IDS = COSMETICS.map((c) => c.id)
+
 // ===== 뱃지 (§8-4) =====
 export const BADGES = [
   { id: 'earlybird', icon: '🌅', name: '얼리버드', desc: '22시 이전 취침 3회' },
