@@ -374,12 +374,17 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
       )}
 
       {/* ===== 앞쪽 장착 아이템 (상점에서 구매·장착) ===== */}
-      {/* 목도리 (목·가슴 위) */}
+      {/* 목도리 (목에 두르고 앞으로 자락) */}
       {has('scarf') && (
         <g>
-          <path d="M58 112 Q80 124 102 112 L104 126 Q80 136 56 126 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
-          <path d="M92 124 l11 22 -9 3 -7 -20 z" fill="#dc2626" stroke="#b91c1c" strokeWidth="1" />
-          <path d="M64 118 h32 M60 124 h40" stroke="#b91c1c" strokeWidth="1" opacity="0.4" />
+          {/* 목에 두른 부분 */}
+          <path d="M55 114 Q80 129 105 114 Q108 123 105 132 Q80 142 55 132 Q52 123 55 114 Z" fill="#e11d48" stroke="#9f1239" strokeWidth="1.2" />
+          {/* 앞으로 늘어뜨린 자락 */}
+          <path d="M83 131 L92 156 L81 156 L79 133 Z" fill="#e11d48" stroke="#9f1239" strokeWidth="1" />
+          {/* 술(프린지) */}
+          <path d="M81 156 l0 5 M84.5 156 l1 5 M88 156 l1.5 5" stroke="#fecdd3" strokeWidth="1.5" strokeLinecap="round" />
+          {/* 니트 결 */}
+          <path d="M60 121 h40 M60 127 h40" stroke="#9f1239" strokeWidth="0.8" opacity="0.4" />
         </g>
       )}
       {/* 금메달 (가슴) */}
@@ -413,13 +418,17 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
           <rect x="125" y="78" width="9" height="14" rx="4" fill="#94a3b8" />
         </g>
       )}
-      {/* 야구 모자 (머리 위) */}
+      {/* 야구 모자 (앞을 보는 정면 모자) */}
       {has('cap') && !has('headphones') && (
         <g>
-          <path d="M28 54 Q80 20 132 54 Q120 46 80 44 Q40 46 28 54 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="1.5" />
-          <path d="M118 54 q26 -1 30 10 q-18 5 -34 -3 Z" fill="#1d4ed8" stroke="#1e40af" strokeWidth="1" />
-          <circle cx="80" cy="30" r="3.5" fill="#1e40af" />
-          <path d="M80 44 Q80 38 88 35" stroke="#3b82f6" strokeWidth="2" fill="none" opacity="0.6" />
+          {/* 챙 (이마 위 앞쪽) */}
+          <path d="M40 55 Q80 70 120 55 Q80 61 40 55 Z" fill="#1e3a8a" stroke="#172554" strokeWidth="1" />
+          {/* 크라운(돔) */}
+          <path d="M35 56 Q29 25 80 22 Q131 25 125 56 Q80 47 35 56 Z" fill="#2563eb" stroke="#1d4ed8" strokeWidth="1.5" />
+          {/* 패널 이음선 + 단추 */}
+          <path d="M80 24 Q80 40 80 50" stroke="#1d4ed8" strokeWidth="1.5" opacity="0.45" />
+          <path d="M57 31 Q80 25 103 31" stroke="#3b82f6" strokeWidth="2.5" fill="none" opacity="0.5" strokeLinecap="round" />
+          <circle cx="80" cy="25" r="3" fill="#1e3a8a" />
         </g>
       )}
       {/* 황금 왕관 (머리 위) */}
