@@ -136,15 +136,12 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
       <g className="anim-breathe">
         {isFit && (
           <>
-            {/* 팔 근육(알통) */}
-            <ellipse cx="23" cy="152" rx="15" ry="20" fill="url(#skinG)" stroke={outline} strokeWidth="1.5" />
-            <ellipse cx="137" cy="152" rx="15" ry="20" fill="url(#skinG)" stroke={outline} strokeWidth="1.5" />
-            <path d="M16 148 q7 -7 14 0" stroke="#e8a87c" strokeWidth="2" fill="none" strokeLinecap="round" />
-            <path d="M130 148 q7 -7 14 0" stroke="#e8a87c" strokeWidth="2" fill="none" strokeLinecap="round" />
-            {/* 넓은 어깨의 빨간 운동 셔츠 */}
+            {/* 넓은 어깨의 빨간 운동 셔츠 (탄탄한 몸) */}
             <path d="M20 176 Q18 120 80 116 Q142 120 140 176 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1.5" />
             <path d="M42 176 Q36 140 54 126" fill="none" stroke="#b91c1c" strokeWidth="2" opacity="0.5" />
             <path d="M118 176 Q124 140 106 126" fill="none" stroke="#b91c1c" strokeWidth="2" opacity="0.5" />
+            {/* 가슴 근육 라인 (셔츠 안쪽) */}
+            <path d="M80 129 Q63 137 52 151 M80 129 Q97 137 108 151" stroke="#b91c1c" strokeWidth="1.5" fill="none" opacity="0.4" strokeLinecap="round" />
             <path d="M80 138 l3.6 7.3 8 1.1-5.8 5.7 1.4 8-7.2-3.8-7.2 3.8 1.4-8-5.8-5.7 8-1.1z" fill="#fff" stroke="#e5e7eb" strokeWidth="1" />
           </>
         )}
@@ -213,8 +210,8 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
         {/* 정수리 윤기 (윗부분만 살짝) */}
         <path d="M54 32 Q72 24 94 30" stroke={isSmart ? '#b58a5a' : '#6b4f38'} strokeWidth={isSmart ? 4 : 3.5} fill="none" strokeLinecap="round" opacity={isSmart ? 0.7 : 0.45} />
         {isSmart && <path d="M80 22 Q83 38 86 52" stroke="#2a1d12" strokeWidth="2" opacity="0.4" fill="none" strokeLinecap="round" />}
-        {/* 운동왕 = 빨간 머리띠 (이마 위, 눈보다 위에) */}
-        {isFit && (
+        {/* 운동왕 = 빨간 머리띠 (머리 아이템 장착 시엔 겹치지 않게 숨김) */}
+        {isFit && !has('cap') && !has('crown') && !has('headphones') && (
           <>
             <path d="M30 52 Q80 38 130 52 L130 62 Q80 48 30 62 Z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
             <path d="M126 57 l13 -4 -3 11 z" fill="#ef4444" stroke="#b91c1c" strokeWidth="1" />
@@ -339,8 +336,8 @@ function HanbyulSVG({ mood, look = 'normal', level = 0, gear = [], className, st
       )}
 
       {/* ===== 성장 스타일 액세서리 ===== */}
-      {/* 공부왕: 동그란 안경 */}
-      {isSmart && (
+      {/* 공부왕: 동그란 안경 (선글라스 장착 시엔 겹치지 않게 숨김) */}
+      {isSmart && !has('sunglasses') && (
         <g stroke="#2f2a45" strokeWidth="3" fill="rgba(180,220,255,0.22)">
           <circle cx="58" cy="75" r="15" />
           <circle cx="102" cy="75" r="15" />
