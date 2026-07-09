@@ -180,4 +180,5 @@ export const initialGame = {
   shopSeen: false,
   tab: 'home',
   scene: 'room',
+  lookKey: 'normal:0',
 }

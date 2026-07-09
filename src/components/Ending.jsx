@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { BADGES, TITLES, titleOf } from '../game/data.js'
 import { sfx } from '../game/sound.js'
+import { Hanbyul, computeLook, LOOK_NICK } from './Character.jsx'
 
 export function Confetti({ n = 60 }) {
   const pieces = useMemo(() =>
@@ -46,10 +47,17 @@ function ReportCard({ g, accent }) {
   const [engraved, setEngraved] = useState(false)
   const t = titleOf(g.xp)
   const c = g.counters
+  const look = computeLook(c)
+  const finalMood = g.stats.popcorn > 70 ? 'popcorn' : g.stats.health < 30 ? 'tired' : (g.stats.popcorn < 30 && g.stats.health > 70) ? 'good' : 'normal'
 
   return (
     <div className={`bg-white rounded-3xl shadow-2xl p-5 text-slate-800 w-full`} style={{ borderTop: `10px solid ${accent}` }}>
       <h3 className="text-xl text-center">📋 한별이의 7일 성적표</h3>
+      {/* 7일 뒤 진화한 한별이의 모습 */}
+      <div className="flex flex-col items-center mt-1">
+        <Hanbyul mood={finalMood} look={look.type} level={look.level} className="w-28 h-28" />
+        <div className="-mt-1 px-3 py-0.5 rounded-full text-white text-sm font-bold" style={{ background: accent }}>{LOOK_NICK[look.key]}</div>
+      </div>
       <p className="text-center text-2xl mt-2">{t.icon} <b>{t.name}</b> <span className="text-sm text-slate-500">Lv.{g.level}</span></p>
 
       <div className="mt-4 space-y-2">

@@ -8,7 +8,7 @@ import {
 import { sfx } from './game/sound.js'
 import { MidBoss, FinalBoss } from './components/Boss.jsx'
 import Ending, { Confetti } from './components/Ending.jsx'
-import { Hanbyul } from './components/Character.jsx'
+import { Hanbyul, computeLook, GROWTH_MSG, LOOK_NICK } from './components/Character.jsx'
 import Scene from './components/Scene.jsx'
 import ArcadeGame from './components/ArcadeGame.jsx'
 
@@ -83,6 +83,15 @@ function checkBadges(s, out) {
       s.badges.push(b.id)
       s.modals.push({ type: 'badge', badge: b })
       out.sfx.push('badge')
+    }
+  }
+  // 성장 외형 변화 감지 → 토스트로 알림
+  const look = computeLook(s.counters)
+  if (look.key !== s.lookKey) {
+    s.lookKey = look.key
+    if (look.type !== 'normal' && GROWTH_MSG[look.key]) {
+      out.toasts.push(GROWTH_MSG[look.key])
+      out.sfx.push(look.type === 'messy' ? 'bad' : 'levelup')
     }
   }
 }
@@ -613,7 +622,7 @@ export default function App() {
                   🔥 {g.combo}연속 콤보!
                 </div>
               )}
-              <CharacterFace stats={g.stats} sparkle={charSparkle} />
+              <CharacterFace stats={g.stats} sparkle={charSparkle} counters={g.counters} />
               {g.day === 7 && g.hour >= 14 && (
                 <p className="text-purple-200 text-xs mt-2 anim-fadein bg-black/30 px-3 py-1 rounded-full">⚡ 결전의 기운이 감돈다…</p>
               )}
@@ -716,13 +725,18 @@ function NightStars() {
   )
 }
 
-function CharacterFace({ stats, sparkle }) {
+function CharacterFace({ stats, sparkle, counters }) {
   let mood = 'normal', anim = 'anim-idle', caption = '보통이야~'
   if (stats.popcorn > 70) { mood = 'popcorn'; anim = 'anim-shakehard'; caption = '머리가 팝콘팝콘…' }
   else if (stats.health < 30) { mood = 'tired'; anim = 'anim-sleepy'; caption = '너무 졸리고 지쳤어…' }
   else if (stats.popcorn < 30 && stats.health > 70) { mood = 'good'; anim = 'anim-bouncey'; caption = '컨디션 최고!!' }
+  const look = computeLook(counters || {})
+  const nick = LOOK_NICK[look.key]
   return (
     <div className="relative flex flex-col items-center">
+      {look.type !== 'normal' && (
+        <div className="mb-1 bg-white/90 text-slate-700 text-xs px-3 py-0.5 rounded-full shadow font-bold anim-pop">{nick}</div>
+      )}
       {sparkle && (
         <>
           <span className="absolute -top-4 -left-6 text-2xl anim-sparkle">✨</span>
@@ -730,7 +744,7 @@ function CharacterFace({ stats, sparkle }) {
           <span className="absolute top-8 -left-9 text-xl anim-sparkle" style={{ animationDelay: '0.4s' }}>⭐</span>
         </>
       )}
-      <Hanbyul mood={mood} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
+      <Hanbyul mood={mood} look={look.type} level={look.level} className={`w-36 h-36 ${anim}`} style={{ filter: 'drop-shadow(0 6px 12px rgba(0,0,0,0.25))' }} />
       <div className="w-24 h-3 -mt-1 rounded-[50%] bg-black/20 blur-[3px]" />
       <div className="mt-1 bg-white/85 text-slate-600 text-xs px-3 py-1 rounded-full shadow">한별: {caption}</div>
     </div>
